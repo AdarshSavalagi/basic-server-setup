@@ -1,0 +1,28 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0
+    container_name: keycloak
+    restart: unless-stopped
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: main-database                # existing Postgres service name
+      KC_DB_URL_DATABASE: keycloak                 # DB name Keycloak will use
+      KC_DB_USERNAME: ${POSTGRES_USER}             # reuse existing Postgres credentials
+      KC_DB_PASSWORD: ${POSTGRES_PASS}
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_PROXY: "edge"
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASS:-admin}
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+    depends_on:
+      - main-database
+    ports:
+      - "${KEYCLOAK_HTTP_PORT:-8080}:8080"
+    command: start-dev
+    networks:
+      - data-network
+
+networks:
+  data-network:
+    external: true
