@@ -1,0 +1,40 @@
+name: deploy to vps
+
+on:
+  push:
+    branches:
+      - release  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }} 
+          script: |
+            set -e  
+
+            echo "🔄 Pulling latest changes..."
+            cd <project-path>
+            git fetch origin release
+            git reset --hard origin/release
+
+            echo "🛑 Stopping old containers..."
+            docker compose down
+
+            echo "📦 Building new Docker images..."
+            docker compose build --no-cache
+
+            echo "🚀 Starting new containers using Blue-Green Deployment..."
+            docker compose up -d --remove-orphans
+
+            echo "✅ Deployment completed successfully!"
