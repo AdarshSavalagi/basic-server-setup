@@ -1,6 +1,7 @@
 server {
     server_name ;
-
+    listen 80;
+    listen [::]:80;
     # Allow large request body
     client_max_body_size 100M;
 
