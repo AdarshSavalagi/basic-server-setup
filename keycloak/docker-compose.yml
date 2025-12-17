@@ -16,7 +16,7 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USER:-admin}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASS:-admin}
       KC_HEALTH_ENABLED: "true"
-      KC_HOSTNAME: https://domain.com
+      KC_HOSTNAME: domain.com
       KC_METRICS_ENABLED: "true"
     ports:
       - "${KEYCLOAK_HTTP_PORT:-8080}:8080"
