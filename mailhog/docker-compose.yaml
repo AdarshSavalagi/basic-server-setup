@@ -1,0 +1,13 @@
+services:
+
+  mailhog:
+    image: mailhog/mailhog:${MAILHOG_VERSION}
+    container_name: ${MAILHOG_CONTAINER_NAME}
+    ports:
+      - "${MAILHOG_SMTP_PORT}:1025"
+      - "${MAILHOG_UI_PORT}:8025"
+    restart: unless-stopped
+
+# networks:
+#   data-network:
+#     external: true
